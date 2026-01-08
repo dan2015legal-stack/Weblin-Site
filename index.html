@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Weblin Studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+body {
+  margin: 0;
+  background: #0b0f1a;
+  color: #e5e7eb;
+  overflow: hidden;
+}
+
+header {
+  height: 56px;
+  background: #020617;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  border-bottom: 1px solid #1e293b;
+}
+
+header h1 { font-size: 16px; }
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #e5e7eb;
+  font-size: 18px;
+}
+
+.container {
+  padding: 14px;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+  animation: fadeIn .3s;
+}
+
+.project {
+  background: #020617;
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  border: 1px solid #1e293b;
+  cursor: pointer;
+  transition: transform .2s;
+}
+
+.project:active { transform: scale(.97); }
+
+.fab {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: white;
+  font-size: 26px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}
+
+.editor {
+  display: none;
+  height: calc(100vh - 56px);
+  flex-direction: column;
+  animation: slideIn .3s;
+}
+
+.tabs {
+  display: flex;
+  background: #020617;
+  border-bottom: 1px solid #1e293b;
+}
+
+.tab {
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.tab.active {
+  color: white;
+  border-bottom: 2px solid #2563eb;
+}
+
+textarea {
+  flex: 1;
+  background: #0b0f1a;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-family: monospace;
+  font-size: 13px;
+  outline: none;
+  display: none;
+}
+
+textarea.active { display: block; }
+
+iframe {
+  flex: 1;
+  border: none;
+  background: white;
+  display: none;
+}
+
+iframe.active { display: block; }
+
+.bottom-bar {
+  height: 52px;
+  background: #020617;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid #1e293b;
+}
+
+.bottom-bar button {
+  background: none;
+  border: none;
+  color: #e5e7eb;
+  font-size: 14px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="title">Weblin Studio</h1>
+  <button class="icon-btn" onclick="goHome()">🏠</button>
+</header>
+
+<!-- HOME -->
+<div class="container" id="home">
+  <h3>Seus Projetos</h3>
+  <div id="projectList"></div>
+</div>
+
+<button class="fab" id="fab" onclick="createProject()">＋</button>
+
+<!-- EDITOR -->
+<div class="editor" id="editor">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('html', this)">HTML</div>
+    <div class="tab" onclick="switchTab('css', this)">CSS</div>
+    <div class="tab" onclick="switchTab('js', this)">JS</div>
+    <div class="tab" onclick="switchTab('weblin', this)">WEBLIN</div>
+    <div class="tab" onclick="switchTab('preview', this)">PREVIEW</div>
+  </div>
+
+  <textarea id="html" class="active" placeholder="HTML..."></textarea>
+  <textarea id="css" placeholder="CSS..."></textarea>
+  <textarea id="js" placeholder="JS..."></textarea>
+  <textarea id="weblin" placeholder="WEBLIN..."></textarea>
+
+  <iframe id="preview"></iframe>
+
+  <div class="bottom-bar">
+    <button onclick="goHome()">Projetos</button>
+    <button onclick="saveProject()">Salvar</button>
+    <button onclick="runPreview()">Run</button>
+  </div>
+</div>
+
+<script>
+let currentProject = null;
+
+function createProject() {
+  const name = prompt("Nome do projeto:");
+  if (!name) return;
+
+  const projects = JSON.parse(localStorage.getItem("weblin_projects") || "[]");
+  projects.push(name);
+  localStorage.setItem("weblin_projects", JSON.stringify(projects));
+
+  localStorage.setItem("project_" + name, JSON.stringify({
+    html: "", css: "", js: "", weblin: ""
+  }));
+
+  loadProjects();
+}
+
+function loadProjects() {
+  const list = document.getElementById("projectList");
+  list.innerHTML = "";
+  const projects = JSON.parse(localStorage.getItem("weblin_projects") || "[]");
+
+  projects.forEach(name => {
+    const div = document.createElement("div");
+    div.className = "project";
+    div.innerText = name;
+    div.onclick = () => openProject(name);
+    list.appendChild(div);
+  });
+}
+
+function openProject(name) {
+  currentProject = name;
+  const data = JSON.parse(localStorage.getItem("project_" + name));
+  html.value = data.html;
+  css.value = data.css;
+  js.value = data.js;
+  weblin.value = data.weblin;
+
+  home.style.display = "none";
+  editor.style.display = "flex";
+  fab.style.display = "none";
+  title.innerText = name;
+}
+
+function goHome() {
+  editor.style.display = "none";
+  home.style.display = "block";
+  fab.style.display = "flex";
+  title.innerText = "Weblin Studio";
+}
+
+function saveProject() {
+  if (!currentProject) return;
+  const data = {
+    html: html.value,
+    css: css.value,
+    js: js.value,
+    weblin: weblin.value
+  };
+  localStorage.setItem("project_" + currentProject, JSON.stringify(data));
+  alert("Salvo!");
+}
+
+function switchTab(tab, el) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  el.classList.add("active");
+
+  ["html","css","js","weblin"].forEach(id => {
+    document.getElementById(id).classList.remove("active");
+  });
+  preview.classList.remove("active");
+
+  if (tab === "preview") {
+    preview.classList.add("active");
+    runPreview();
+  } else {
+    document.getElementById(tab).classList.add("active");
+  }
+}
+
+function runPreview() {
+  const doc = `
+  <html>
+  <head>
+  <style>${css.value}</style>
+  </head>
+  <body>
+  ${html.value}
+  <script>${js.value}<\/script>
+  </body>
+  </html>`;
+  preview.srcdoc = doc;
+}
+
+loadProjects();
+</script>
+
+</body>
+  </html>
