@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Weblin Studio Corrigido</title>
+<title>Weblin Studio Definitivo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
@@ -24,9 +24,11 @@ header h1{font-size:16px;}
 .tabs{display:flex;background:#020617;border-bottom:1px solid #1e293b;}
 .tab{padding:10px 14px;font-size:13px;color:#9ca3af;cursor:pointer;}
 .tab.active{color:white;border-bottom:2px solid #2563eb;}
-textarea{flex:1;background:linear-gradient(145deg,#0f1320,#0b0f1a);color:white;border:none;padding:12px;font-family:monospace;font-size:13px;outline:none;display:none;border-radius:8px;margin:8px;box-shadow:inset 0 2px 8px rgba(0,0,0,0.3);}
+textarea{flex:1;background:linear-gradient(145deg,#0f1320,#0b0f1a);color:white;border:none;padding:12px;font-family:monospace;font-size:13px;outline:none;border-radius:8px;margin:8px;box-shadow:inset 0 2px 8px rgba(0,0,0,0.3);}
 textarea.active{display:block;}
+textarea.hidden{display:none;}
 iframe{flex:1;border:none;background:#fff;border-radius:8px;margin:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3);display:none;}
+iframe.active{display:block;}
 .bottom-bar{height:52px;background:#020617;display:flex;justify-content:space-around;align-items:center;border-top:1px solid #1e293b;}
 .bottom-bar button{background:none;border:none;color:#e5e7eb;font-size:14px;cursor:pointer;}
 .bottom-bar button:hover{color:#2563eb;}
@@ -40,7 +42,7 @@ button.create-file-btn:hover{background:#1e40af;transform:scale(1.05);}
 <body>
 
 <header>
-<h1 id="title">Weblin Studio Corrigido</h1>
+<h1 id="title">Weblin Studio</h1>
 <button class="icon-btn" onclick="goHome()">🏠</button>
 </header>
 
@@ -48,6 +50,7 @@ button.create-file-btn:hover{background:#1e40af;transform:scale(1.05);}
   <h3>Seus Projetos</h3>
   <div id="projectList"></div>
 </div>
+
 <button class="fab" id="fab" onclick="createProject()">＋</button>
 
 <div class="editor" id="editor">
@@ -62,10 +65,10 @@ button.create-file-btn:hover{background:#1e40af;transform:scale(1.05);}
     <div class="tab" onclick="switchTab('preview', this)">PREVIEW</div>
   </div>
 
-  <textarea id="html"></textarea>
-  <textarea id="css"></textarea>
-  <textarea id="js"></textarea>
-  <textarea id="weblin"></textarea>
+  <textarea id="html" class="hidden"></textarea>
+  <textarea id="css" class="hidden"></textarea>
+  <textarea id="js" class="hidden"></textarea>
+  <textarea id="weblin" class="hidden"></textarea>
 
   <div class="autocomplete" id="autocomplete"></div>
   <iframe id="preview"></iframe>
@@ -128,7 +131,7 @@ function goHome(){
   editor.style.display="none";
   home.style.display="block";
   fab.style.display="flex";
-  title.innerText="Weblin Studio Corrigido";
+  title.innerText="Weblin Studio";
 }
 
 function saveProject(){
@@ -152,12 +155,12 @@ function getCurrentFileData(){
 function switchTab(tab,el){
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   el.classList.add("active");
-  ["html","css","js","weblin"].forEach(id=>document.getElementById(id).classList.remove("active"));
-  preview.style.display="none";
+  ["html","css","js","weblin"].forEach(id=>document.getElementById(id).classList.add("hidden"));
+  preview.classList.remove("active");
   if(tab==="preview"){
-    preview.style.display="block";
-    runPreview();
+    preview.classList.add("active");
   } else {
+    document.getElementById(tab).classList.remove("hidden");
     document.getElementById(tab).classList.add("active");
   }
 }
@@ -216,10 +219,9 @@ function saveCurrentFile(){
 function loadFileContent(){
   const data=JSON.parse(localStorage.getItem("project_"+currentProject));
   const f=data.files[currentFile];
-  html.value=f.lang==="html"?f.content:"";
-  css.value=f.lang==="css"?f.content:"";
-  js.value=f.lang==="js"?f.content:"";
-  weblin.value=f.lang==="weblin"?f.content:"";
+  ["html","css","js","weblin"].forEach(id=>{
+    document.getElementById(id).value=f.lang===id?f.content:"";
+  });
 }
 
 function processWeblin(content){
@@ -245,10 +247,14 @@ function runPreview(){
   preview.srcdoc=doc;
 }
 
-const autocomplete=document.getElementById("autocomplete");
+const autocomplete=document.createElement("div");
+autocomplete.className="autocomplete";
+document.body.appendChild(autocomplete);
+
 ["html","css","js","weblin"].forEach(langId=>{
   document.getElementById(langId).addEventListener("input",e=>handleAutocomplete(e,langId));
 });
+
 function handleAutocomplete(e,lang){
   const area=document.getElementById(lang);
   const val=area.value;
@@ -268,16 +274,16 @@ function handleAutocomplete(e,lang){
     autocomplete.style.display="block";
   } else autocomplete.style.display="none";
 }
+
 function insertSuggestion(s,lang){
   const area=document.getElementById(lang);
   const start=area.selectionStart;
   const val=area.value;
-  let insert=s;
-  if(lang==="html"||lang==="weblin"){if(s.startsWith("<") && !s.endsWith("/>")) insert=s+`</${s.slice(1,s.indexOf(">"))}>`;}
-  area.value=val.slice(0,start)+insert+val.slice(start);
+  area.value=val.slice(0,start)+s+val.slice(start);
   area.focus();
   autocomplete.style.display="none";
 }
+
 document.addEventListener("click",()=>autocomplete.style.display="none");
 
 loadProjects();
