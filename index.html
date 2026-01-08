@@ -2,70 +2,63 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Weblin Studio </title>
+<title>Weblin Studio Avançado</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-body { margin:0; background:#0b0f1a; color:#e5e7eb; overflow:hidden; }
-header { height:56px; background:#020617; display:flex; align-items:center; justify-content:space-between; padding:0 14px; border-bottom:1px solid #1e293b; }
-header h1 { font-size:16px; }
-.icon-btn { background:none; border:none; color:#e5e7eb; font-size:18px; cursor:pointer; }
+*{box-sizing:border-box;font-family:'Inter',sans-serif;margin:0;padding:0;}
+body{background:#0b0f1a;color:#e5e7eb;overflow:hidden;}
+header{height:56px;background:#020617;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #1e293b;}
+header h1{font-size:16px;}
+.icon-btn{background:none;border:none;color:#e5e7eb;font-size:18px;cursor:pointer;}
 
-.container { padding:14px; height:calc(100vh - 56px); overflow-y:auto; animation:fadeIn .3s; }
-.project { background:#020617; padding:14px; border-radius:12px; margin-bottom:10px; border:1px solid #1e293b; cursor:pointer; transition:transform .2s, background .2s; }
-.project:hover { background:#1e293b; }
-.project:active { transform:scale(.97); }
+.container{padding:14px;height:calc(100vh - 56px);overflow-y:auto;}
+.project{background:#020617;padding:14px;border-radius:12px;margin-bottom:10px;border:1px solid #1e293b;cursor:pointer;transition:transform .2s,background .2s;}
+.project:hover{background:#1e293b;transform:scale(1.02);}
+.project:active{transform:scale(.97);}
 
-.fab { position:fixed; bottom:16px; right:16px; width:56px; height:56px; border-radius:50%; background:#2563eb; color:white; font-size:26px; border:none; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(0,0,0,0.4); cursor:pointer; transition:background .2s; }
-.fab:hover { background:#1e40af; }
+.fab{position:fixed;bottom:16px;right:16px;width:56px;height:56px;border-radius:50%;background:#2563eb;color:white;font-size:26px;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,0.4);cursor:pointer;}
+.fab:hover{background:#1e40af;transform:scale(1.1);}
 
-.editor { display:none; height:calc(100vh - 56px); flex-direction:column; animation:slideIn .3s; }
+.editor{display:none;height:calc(100vh - 56px);flex-direction:column;}
+.file-tabs{display:flex;background:#020617;border-bottom:1px solid #1e293b;padding:4px;overflow-x:auto;}
+.file-tab{padding:6px 12px;font-size:13px;color:#9ca3af;cursor:pointer;border-radius:6px;margin-right:5px;white-space:nowrap;transition:background .2s,color .2s,transform .2s;}
+.file-tab.active{color:white;background:#2563eb;transform:scale(1.05);}
 
-.file-tabs { display:flex; background:#020617; border-bottom:1px solid #1e293b; padding:4px; overflow-x:auto; }
-.file-tab { padding:6px 12px; font-size:13px; color:#9ca3af; cursor:pointer; border-radius:6px; margin-right:5px; white-space:nowrap; transition:background .2s, color .2s; }
-.file-tab.active { color:white; background:#2563eb; }
+.tabs{display:flex;background:#020617;border-bottom:1px solid #1e293b;}
+.tab{padding:10px 14px;font-size:13px;color:#9ca3af;cursor:pointer;}
+.tab.active{color:white;border-bottom:2px solid #2563eb;}
 
-.tabs { display:flex; background:#020617; border-bottom:1px solid #1e293b; }
-.tab { padding:10px 14px; font-size:13px; color:#9ca3af; cursor:pointer; transition:color .2s, border-bottom .2s; }
-.tab.active { color:white; border-bottom:2px solid #2563eb; }
+textarea{flex:1;background:linear-gradient(145deg,#0f1320,#0b0f1a);color:white;border:none;padding:12px;font-family:monospace;font-size:13px;outline:none;display:none;border-radius:8px;margin:8px;box-shadow:inset 0 2px 8px rgba(0,0,0,0.3);}
+textarea.active{display:block;}
 
-textarea { flex:1; background: linear-gradient(145deg,#0f1320,#0b0f1a); color:white; border:none; padding:12px; font-family:monospace; font-size:13px; outline:none; display:none; border-radius:8px; margin:8px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.3); }
-textarea.active { display:block; }
+iframe{flex:1;border:none;background:#fff;border-radius:8px;margin:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3);display:none;}
 
-iframe { flex:1; border:none; background:#fff; border-radius:8px; margin:8px; box-shadow:0 4px 12px rgba(0,0,0,0.3); display:none; }
+.bottom-bar{height:52px;background:#020617;display:flex;justify-content:space-around;align-items:center;border-top:1px solid #1e293b;}
+.bottom-bar button{background:none;border:none;color:#e5e7eb;font-size:14px;cursor:pointer;}
+.bottom-bar button:hover{color:#2563eb;}
 
-.bottom-bar { height:52px; background:#020617; display:flex; justify-content:space-around; align-items:center; border-top:1px solid #1e293b; }
-.bottom-bar button { background:none; border:none; color:#e5e7eb; font-size:14px; cursor:pointer; transition:color .2s; }
-.bottom-bar button:hover { color:#2563eb; }
+button.create-file-btn{margin:5px;padding:6px 10px;border:none;border-radius:6px;background:#2563eb;color:white;cursor:pointer;}
+button.create-file-btn:hover{background:#1e40af;transform:scale(1.05);}
 
-button.create-file-btn { margin:5px; padding:6px 10px; border:none; border-radius:6px; background:#2563eb; color:white; cursor:pointer; transition:background .2s; }
-button.create-file-btn:hover { background:#1e40af; }
-
-@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-@keyframes slideIn { from{transform:translateX(30px);opacity:0;} to{transform:translateX(0);opacity:1;} }
-
-::-webkit-scrollbar { width:8px; }
-::-webkit-scrollbar-track { background:#020617; }
-::-webkit-scrollbar-thumb { background:#2563eb; border-radius:4px; }
+.autocomplete{position:absolute;background:#192734;color:#fff;border:1px solid #2563eb;border-radius:6px;padding:4px;display:none;max-height:160px;overflow-y:auto;z-index:1000;font-size:13px;}
+.autocomplete div{padding:4px 8px;cursor:pointer;}
+.autocomplete div:hover{background:#2563eb;}
 </style>
 </head>
 <body>
 
 <header>
-  <h1 id="title">Weblin Studio</h1>
-  <button class="icon-btn" onclick="goHome()">🏠</button>
+<h1 id="title">Weblin Studio Avançado</h1>
+<button class="icon-btn" onclick="goHome()">🏠</button>
 </header>
 
-<!-- HOME -->
 <div class="container" id="home">
   <h3>Seus Projetos</h3>
   <div id="projectList"></div>
 </div>
-
 <button class="fab" id="fab" onclick="createProject()">＋</button>
 
-<!-- EDITOR -->
 <div class="editor" id="editor">
   <div class="file-tabs" id="fileTabs"></div>
   <button class="create-file-btn" onclick="createFile()">+ Novo Arquivo</button>
@@ -78,11 +71,12 @@ button.create-file-btn:hover { background:#1e40af; }
     <div class="tab" onclick="switchTab('preview', this)">PREVIEW</div>
   </div>
 
-  <textarea id="html" class="active" placeholder="HTML..."></textarea>
-  <textarea id="css" placeholder="CSS..."></textarea>
-  <textarea id="js" placeholder="JS..."></textarea>
-  <textarea id="weblin" placeholder="WEBLIN..."></textarea>
+  <textarea id="html"></textarea>
+  <textarea id="css"></textarea>
+  <textarea id="js"></textarea>
+  <textarea id="weblin"></textarea>
 
+  <div class="autocomplete" id="autocomplete"></div>
   <iframe id="preview"></iframe>
 
   <div class="bottom-bar">
@@ -93,27 +87,31 @@ button.create-file-btn:hover { background:#1e40af; }
 </div>
 
 <script>
-let currentProject = null;
-let currentFile = null;
+let currentProject=null,currentFile=null;
 
-// Cria novo projeto
-function createProject() {
-  const name = prompt("Nome do projeto:");
-  if (!name) return;
-  const projects = JSON.parse(localStorage.getItem("weblin_projects")||"[]");
-  if(projects.includes(name)) { alert("Projeto já existe!"); return; }
+const suggestionsMap={
+html:["<h1>","<h2>","<p>","<div>","<span>","<a>","<ul>","<li>","class","id","style","onclick"],
+css:["color","background","margin","padding","font-size","display","position","top","left","right","bottom","border","border-radius"],
+js:["function","let","const","var","if","else","for","while","return","console.log","document"],
+weblin:["title","h1","div","button","input","class","id"]
+};
+
+function createProject(){
+  const name=prompt("Nome do projeto:");
+  if(!name) return;
+  const projects=JSON.parse(localStorage.getItem("weblin_projects")||"[]");
+  if(projects.includes(name)){alert("Projeto já existe!"); return;}
   projects.push(name);
-  localStorage.setItem("weblin_projects", JSON.stringify(projects));
-  const projectData = { files: {"index.html": {lang:"html", content:""}}, currentFile:"index.html" };
-  localStorage.setItem("project_"+name, JSON.stringify(projectData));
+  localStorage.setItem("weblin_projects",JSON.stringify(projects));
+  const projectData={files:{"index.html":{lang:"html",content:""}},currentFile:"index.html"};
+  localStorage.setItem("project_"+name,JSON.stringify(projectData));
   loadProjects();
 }
 
-// Carrega lista de projetos
-function loadProjects() {
-  const list = document.getElementById("projectList");
+function loadProjects(){
+  const list=document.getElementById("projectList");
   list.innerHTML="";
-  const projects = JSON.parse(localStorage.getItem("weblin_projects")||"[]");
+  const projects=JSON.parse(localStorage.getItem("weblin_projects")||"[]");
   projects.forEach(name=>{
     const div=document.createElement("div");
     div.className="project";
@@ -123,11 +121,10 @@ function loadProjects() {
   });
 }
 
-// Abre projeto
 function openProject(name){
   currentProject=name;
   const data=JSON.parse(localStorage.getItem("project_"+name));
-  currentFile = data.currentFile;
+  currentFile=data.currentFile;
   loadFileTabs(data);
   loadFileContent();
   home.style.display="none";
@@ -136,90 +133,80 @@ function openProject(name){
   title.innerText=name;
 }
 
-// Volta para Home
 function goHome(){
   editor.style.display="none";
   home.style.display="block";
   fab.style.display="flex";
-  title.innerText="Weblin Studio";
+  title.innerText="Weblin Studio Avançado";
 }
 
-// Salva projeto
 function saveProject(){
-  if(!currentProject || !currentFile) return;
-  const data = JSON.parse(localStorage.getItem("project_"+currentProject));
-  const f = getCurrentFileData();
-  data.files[currentFile]=f;
+  if(!currentProject||!currentFile) return;
+  const data=JSON.parse(localStorage.getItem("project_"+currentProject));
+  data.files[currentFile]=getCurrentFileData();
   data.currentFile=currentFile;
-  localStorage.setItem("project_"+currentProject, JSON.stringify(data));
+  localStorage.setItem("project_"+currentProject,JSON.stringify(data));
   alert("Salvo!");
 }
 
-// Retorna conteúdo do arquivo atual
 function getCurrentFileData(){
-  const f = { lang: getActiveTab(), content:"" };
-  if(f.lang==="html") f.content = html.value;
-  else if(f.lang==="css") f.content = css.value;
-  else if(f.lang==="js") f.content = js.value;
-  else if(f.lang==="weblin") f.content = weblin.value;
+  const f={lang:getActiveTab(),content:""};
+  if(f.lang==="html") f.content=html.value;
+  else if(f.lang==="css") f.content=css.value;
+  else if(f.lang==="js") f.content=js.value;
+  else if(f.lang==="weblin") f.content=weblin.value;
   return f;
 }
 
-// Troca de abas
-function switchTab(tab, el){
+function switchTab(tab,el){
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   el.classList.add("active");
   ["html","css","js","weblin"].forEach(id=>document.getElementById(id).classList.remove("active"));
-  preview.classList.remove("active");
-  if(tab==="preview"){ preview.classList.add("active"); runPreview(); }
-  else { document.getElementById(tab).classList.add("active"); }
+  preview.style.display="none";
+  if(tab==="preview"){
+    preview.style.display="block";
+    runPreview();
+  } else {
+    document.getElementById(tab).classList.add("active");
+  }
 }
 
-// Retorna a aba ativa
 function getActiveTab(){
-  for(const id of ["html","css","js","weblin"]){
+  for(const id of ["html","css","js","weblin"])
     if(document.getElementById(id).classList.contains("active")) return id;
-  }
   return "html";
 }
 
-// Cria novo arquivo
 function createFile(){
   if(!currentProject) return;
-  saveCurrentFile(); // salva arquivo atual
-
-  const fname = prompt("Nome do arquivo:");
+  saveCurrentFile();
+  const fname=prompt("Nome do arquivo:");
   if(!fname) return;
-  const lang = prompt("Qual a linguagem? (html/css/js/weblin)").toLowerCase();
-  if(!["html","css","js","weblin"].includes(lang)){
-    alert("Linguagem inválida!"); return;
-  }
-
-  const data = JSON.parse(localStorage.getItem("project_"+currentProject));
-  if(data.files[fname]){ alert("Arquivo já existe!"); return; }
-  data.files[fname] = {lang:lang, content:""};
-  currentFile = fname;
-  data.currentFile = currentFile;
-  localStorage.setItem("project_"+currentProject, JSON.stringify(data));
-
+  const lang=prompt("Linguagem? (html/css/js/weblin)").toLowerCase();
+  if(!["html","css","js","weblin"].includes(lang)){alert("Inválido!"); return;}
+  const data=JSON.parse(localStorage.getItem("project_"+currentProject));
+  if(data.files[fname]){alert("Arquivo já existe!"); return;}
+  data.files[fname]={lang:lang,content:""};
+  currentFile=fname;
+  data.currentFile=currentFile;
+  localStorage.setItem("project_"+currentProject,JSON.stringify(data));
   loadFileTabs(data);
   loadFileContent();
 }
 
-// Carrega abas de arquivos
 function loadFileTabs(data){
-  const tabs = document.getElementById("fileTabs");
+  const tabs=document.getElementById("fileTabs");
   tabs.innerHTML="";
   for(let fname in data.files){
-    const div = document.createElement("div");
+    const div=document.createElement("div");
     div.className="file-tab";
     if(fname===currentFile) div.classList.add("active");
-    div.innerText = fname + " [" + data.files[fname].lang + "]";
-    div.onclick = ()=>{
-      saveCurrentFile(); // salva antes de trocar
-      currentFile = fname;
-      data.currentFile = currentFile;
-      localStorage.setItem("project_"+currentProject, JSON.stringify(data));
+    div.innerText=fname+" ["+data.files[fname].lang+"]";
+    div.onclick=()=>{
+      saveCurrentFile();
+      currentFile=fname;
+      data.currentFile=currentFile;
+      localStorage.setItem("project_"+currentProject,JSON.stringify(data));
       loadFileTabs(data);
       loadFileContent();
     };
@@ -227,58 +214,80 @@ function loadFileTabs(data){
   }
 }
 
-// Salva conteúdo do arquivo atual
 function saveCurrentFile(){
-  if(!currentProject || !currentFile) return;
-  const data = JSON.parse(localStorage.getItem("project_"+currentProject));
-  const f = getCurrentFileData();
-  data.files[currentFile]=f;
+  if(!currentProject||!currentFile) return;
+  const data=JSON.parse(localStorage.getItem("project_"+currentProject));
+  data.files[currentFile]=getCurrentFileData();
   data.currentFile=currentFile;
-  localStorage.setItem("project_"+currentProject, JSON.stringify(data));
+  localStorage.setItem("project_"+currentProject,JSON.stringify(data));
 }
 
-// Carrega conteúdo do arquivo atual
 function loadFileContent(){
-  const data = JSON.parse(localStorage.getItem("project_"+currentProject));
-  const f = data.files[currentFile];
-  html.value = f.lang==="html"?f.content:"";
-  css.value = f.lang==="css"?f.content:"";
-  js.value = f.lang==="js"?f.content:"";
-  weblin.value = f.lang==="weblin"?f.content:"";
+  const data=JSON.parse(localStorage.getItem("project_"+currentProject));
+  const f=data.files[currentFile];
+  html.value=f.lang==="html"?f.content:"";
+  css.value=f.lang==="css"?f.content:"";
+  js.value=f.lang==="js"?f.content:"";
+  weblin.value=f.lang==="weblin"?f.content:"";
 }
 
-// Roda Preview
+function processWeblin(content){
+  return content.replace(/title\s+(.*)/g,'<title>$1</title>')
+                .replace(/h1\s+(.*)/g,'<h1>$1</h1>')
+                .replace(/div\s+(.*)/g,'<div>$1</div>')
+                .replace(/button\s+(.*)/g,'<button>$1</button>')
+                .replace(/input\s+(.*)/g,'<input />');
+}
+
 function runPreview(){
   saveCurrentFile();
-  const data = JSON.parse(localStorage.getItem("project_"+currentProject));
-  const f = data.files[currentFile];
-
-  let doc = `<html><head><style>${f.lang==="css"?f.content:""}</style></head><body>${f.lang==="html"?f.content:""}<script>${f.lang==="js"?f.content:""}<\/script></body></html>`;
-
-  if(f.lang==="weblin" && f.content.trim()!=""){
-    let lines=f.content.split("\n");
-    let wl="";
-    lines.forEach(line=>{
-      line=line.trim();
-      if(line.startsWith("title ")) wl+=`<h1 style="color:#1da1f2;">${line.slice(6).replace(/"/g,"")}</h1>`;
-      else if(line.startsWith("h1 ")) wl+=`<h1>${line.slice(3).replace(/"/g,"")}</h1>`;
-      else if(line.startsWith("div ")) wl+=`<div style="background:#192734;padding:10px;margin:5px 0;border-radius:5px;">${line.slice(4).replace(/"/g,"")}</div>`;
-      else if(line.startsWith("input ")){
-        const placeholder=line.match(/"(.+?)"/)?.[1]||"";
-        const id=line.match(/id=(\w+)/)?.[1]||"";
-        wl+=`<input type="text" placeholder="${placeholder}" id="${id}" style="padding:8px;margin:5px 0;width:80%;">`;
-      }else if(line.startsWith("button ")){
-        const txt=line.match(/"(.+?)"/)?.[1]||"Botão";
-        wl+=`<button onclick="alert('Botão clicado!')">${txt}</button>`;
-      }
-    });
-    doc=`<html><body style="background:#15202b;color:#fff;font-family:Arial;">${wl}</body></html>`;
+  const data=JSON.parse(localStorage.getItem("project_"+currentProject));
+  let htmlContent="", cssContent="", jsContent="", weblinContent="";
+  for(let fname in data.files){
+    const f=data.files[fname];
+    if(f.lang==="html") htmlContent+=f.content+"\n";
+    else if(f.lang==="css") cssContent+=f.content+"\n";
+    else if(f.lang==="js") jsContent+=f.content+"\n";
+    else if(f.lang==="weblin") weblinContent+=processWeblin(f.content)+"\n";
   }
-
+  const doc=`<html><head><style>${cssContent}</style></head><body>${htmlContent}${weblinContent}<script>${jsContent}<\/script></body></html>`;
   preview.srcdoc=doc;
 }
 
-// Inicializa
+const autocomplete=document.getElementById("autocomplete");
+["html","css","js","weblin"].forEach(langId=>{
+  document.getElementById(langId).addEventListener("input",e=>handleAutocomplete(e,langId));
+});
+function handleAutocomplete(e,lang){
+  const val=e.target.value;
+  let word=val.split(/[\s\n<>{};]/).pop();
+  const suggestions=suggestionsMap[lang].filter(s=>s.startsWith(word));
+  if(suggestions.length>0){
+    autocomplete.innerHTML="";
+    suggestions.forEach(s=>{
+      const div=document.createElement("div");
+      div.innerText=s;
+      div.onclick=()=>insertSuggestion(s,lang);
+      autocomplete.appendChild(div);
+    });
+    const rect=e.target.getBoundingClientRect();
+    autocomplete.style.left=(rect.left+window.scrollX)+"px";
+    autocomplete.style.top=(rect.bottom+window.scrollY)+"px";
+    autocomplete.style.display="block";
+  } else autocomplete.style.display="none";
+}
+function insertSuggestion(s,lang){
+  const area=document.getElementById(lang);
+  const start=area.selectionStart;
+  const val=area.value;
+  let insert=s;
+  if(lang==="html"||lang==="weblin"){if(s.startsWith("<") && !s.endsWith("/>")) insert=s+`</${s.slice(1,s.indexOf(">"))}>`;}
+  area.value=val.slice(0,start)+insert+val.slice(start);
+  area.focus();
+  autocomplete.style.display="none";
+}
+document.addEventListener("click",()=>autocomplete.style.display="none");
+
 loadProjects();
 </script>
 
