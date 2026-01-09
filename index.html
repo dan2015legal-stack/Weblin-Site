@@ -2,287 +2,117 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Weblin Studio</title>
+<title>Weblin Studio Preview</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
 <style>
 * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+body { margin:0; background:#0b0f1a; color:#e5e7eb; overflow:hidden; }
+header { height:56px; background:#020617; display:flex; align-items:center; justify-content:space-between; padding:0 14px; border-bottom:1px solid #1e293b; }
+header h1 { font-size:16px; }
+.icon-btn { background:none; border:none; color:#e5e7eb; font-size:18px; cursor:pointer; transition: transform .2s; }
+.icon-btn:hover { transform: scale(1.1); }
 
-body {
-  margin: 0;
-  background: #0b0f1a;
-  color: #e5e7eb;
-  overflow: hidden;
-}
+.container { padding:14px; height:calc(100vh - 56px); overflow-y:auto; }
+.project { background:#020617; padding:14px; border-radius:12px; margin-bottom:10px; border:1px solid #1e293b; cursor:pointer; transition: transform .2s, background .2s; }
+.project:hover { background:#1e293b; transform:scale(1.02); }
 
-header {
-  height: 56px;
-  background: #020617;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 14px;
-  border-bottom: 1px solid #1e293b;
-}
+.fab { position:fixed; bottom:16px; right:16px; width:56px; height:56px; border-radius:50%; background:#2563eb; color:white; font-size:26px; border:none; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(0,0,0,0.4); cursor:pointer; transition: transform .2s, background .2s; }
+.fab:hover { background:#1e40af; transform:scale(1.1); }
 
-header h1 { font-size: 16px; }
+.editor { display:flex; flex-direction:column; height:calc(100vh - 56px); }
+.file-tabs { display:flex; background:#020617; border-bottom:1px solid #1e293b; padding:4px; overflow-x:auto; }
+.file-tab { padding:6px 12px; font-size:13px; color:#9ca3af; cursor:pointer; border-radius:6px; margin-right:5px; white-space:nowrap; transition: background .2s, color .2s, transform .2s; }
+.file-tab:hover, .file-tab.active { color:white; background:#2563eb; transform:scale(1.05); }
 
-.icon-btn {
-  background: none;
-  border: none;
-  color: #e5e7eb;
-  font-size: 18px;
-}
+.tabs { display:flex; background:#020617; border-bottom:1px solid #1e293b; }
+.tab { padding:10px 14px; font-size:13px; color:#9ca3af; cursor:pointer; transition: color .2s; }
+.tab:hover, .tab.active { color:white; border-bottom:2px solid #2563eb; }
 
-.container {
-  padding: 14px;
-  height: calc(100vh - 56px);
-  overflow-y: auto;
-  animation: fadeIn .3s;
-}
+textarea { flex:1; background:linear-gradient(145deg,#0f1320,#0b0f1a); color:white; border:none; padding:12px; font-family:monospace; font-size:13px; outline:none; border-radius:8px; margin:8px; box-shadow:inset 0 2px 8px rgba(0,0,0,0.3); }
+textarea::placeholder { color:#9ca3af; }
 
-.project {
-  background: #020617;
-  padding: 14px;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  border: 1px solid #1e293b;
-  cursor: pointer;
-  transition: transform .2s;
-}
+iframe { flex:1; border:none; background:#fff; border-radius:8px; margin:8px; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
 
-.project:active { transform: scale(.97); }
+.bottom-bar { height:52px; background:#020617; display:flex; justify-content:space-around; align-items:center; border-top:1px solid #1e293b; }
+.bottom-bar button { background:none; border:none; color:#e5e7eb; font-size:14px; cursor:pointer; transition: color .2s; }
+.bottom-bar button:hover { color:#2563eb; }
 
-.fab {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: #2563eb;
-  color: white;
-  font-size: 26px;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-}
+button.create-file-btn { margin:5px; padding:6px 10px; border:none; border-radius:6px; background:#2563eb; color:white; cursor:pointer; transition: transform .2s, background .2s; }
+button.create-file-btn:hover { background:#1e40af; transform:scale(1.05); }
 
-.editor {
-  display: none;
-  height: calc(100vh - 56px);
-  flex-direction: column;
-  animation: slideIn .3s;
-}
+.autocomplete { position:absolute; background:#192734; color:#fff; border:1px solid #2563eb; border-radius:6px; padding:4px; max-height:120px; overflow-y:auto; font-size:13px; }
+.autocomplete div { padding:4px 8px; cursor:pointer; }
+.autocomplete div:hover { background:#2563eb; }
 
-.tabs {
-  display: flex;
-  background: #020617;
-  border-bottom: 1px solid #1e293b;
-}
-
-.tab {
-  padding: 10px 14px;
-  font-size: 13px;
-  color: #9ca3af;
-  cursor: pointer;
-}
-
-.tab.active {
-  color: white;
-  border-bottom: 2px solid #2563eb;
-}
-
-textarea {
-  flex: 1;
-  background: #0b0f1a;
-  color: white;
-  border: none;
-  padding: 12px;
-  font-family: monospace;
-  font-size: 13px;
-  outline: none;
-  display: none;
-}
-
-textarea.active { display: block; }
-
-iframe {
-  flex: 1;
-  border: none;
-  background: white;
-  display: none;
-}
-
-iframe.active { display: block; }
-
-.bottom-bar {
-  height: 52px;
-  background: #020617;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  border-top: 1px solid #1e293b;
-}
-
-.bottom-bar button {
-  background: none;
-  border: none;
-  color: #e5e7eb;
-  font-size: 14px;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideIn {
-  from { transform: translateX(30px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
+#chat { position:fixed; bottom:70px; right:16px; width:300px; height:400px; background:#020617; border:1px solid #2563eb; border-radius:10px; display:flex; flex-direction:column; }
+#chatLog { flex:1; overflow-y:auto; padding:10px; font-size:13px; }
+#chatInput { display:flex; border-top:1px solid #1e293b; }
+#chatInput input { flex:1; background:#0b0f1a; color:white; border:none; padding:10px; font-size:13px; }
+#chatInput button { background:#2563eb; border:none; color:white; padding:0 14px; cursor:pointer; transition: background .2s; }
+#chatInput button:hover { background:#1e40af; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1 id="title">Weblin Studio</h1>
-  <button class="icon-btn" onclick="goHome()">🏠</button>
+<h1>Weblin Studio</h1>
+<button class="icon-btn">🏠</button>
 </header>
 
-<!-- HOME -->
 <div class="container" id="home">
   <h3>Seus Projetos</h3>
-  <div id="projectList"></div>
+  <div class="project">Projeto 1</div>
+  <div class="project">Projeto 2</div>
+  <div class="project">Projeto 3</div>
 </div>
+<button class="fab">＋</button>
 
-<button class="fab" id="fab" onclick="createProject()">＋</button>
+<div class="editor">
+  <div class="file-tabs">
+    <div class="file-tab active">index.html [HTML]</div>
+    <div class="file-tab">style.css [CSS]</div>
+    <div class="file-tab">script.js [JS]</div>
+    <div class="file-tab">game.wbl [WEBLIN]</div>
+  </div>
+  <button class="create-file-btn">+ Novo Arquivo</button>
 
-<!-- EDITOR -->
-<div class="editor" id="editor">
   <div class="tabs">
-    <div class="tab active" onclick="switchTab('html', this)">HTML</div>
-    <div class="tab" onclick="switchTab('css', this)">CSS</div>
-    <div class="tab" onclick="switchTab('js', this)">JS</div>
-    <div class="tab" onclick="switchTab('weblin', this)">WEBLIN</div>
-    <div class="tab" onclick="switchTab('preview', this)">PREVIEW</div>
+    <div class="tab active">HTML</div>
+    <div class="tab">CSS</div>
+    <div class="tab">JS</div>
+    <div class="tab">WEBLIN</div>
+    <div class="tab">PREVIEW</div>
   </div>
 
-  <textarea id="html" class="active" placeholder="HTML..."></textarea>
-  <textarea id="css" placeholder="CSS..."></textarea>
-  <textarea id="js" placeholder="JS..."></textarea>
-  <textarea id="weblin" placeholder="WEBLIN..."></textarea>
-
-  <iframe id="preview"></iframe>
+  <textarea placeholder="HTML..."></textarea>
+  <textarea placeholder="CSS..."></textarea>
+  <textarea placeholder="JS..."></textarea>
+  <textarea placeholder="WEBLIN..."></textarea>
+  <iframe></iframe>
 
   <div class="bottom-bar">
-    <button onclick="goHome()">Projetos</button>
-    <button onclick="saveProject()">Salvar</button>
-    <button onclick="runPreview()">Run</button>
+    <button>Projetos</button>
+    <button>Salvar</button>
+    <button>Rodar</button>
+    <button>Excluir Projeto</button>
+    <button>Exportar</button>
+    <button>IA</button>
   </div>
 </div>
 
-<script>
-let currentProject = null;
-
-function createProject() {
-  const name = prompt("Nome do projeto:");
-  if (!name) return;
-
-  const projects = JSON.parse(localStorage.getItem("weblin_projects") || "[]");
-  projects.push(name);
-  localStorage.setItem("weblin_projects", JSON.stringify(projects));
-
-  localStorage.setItem("project_" + name, JSON.stringify({
-    html: "", css: "", js: "", weblin: ""
-  }));
-
-  loadProjects();
-}
-
-function loadProjects() {
-  const list = document.getElementById("projectList");
-  list.innerHTML = "";
-  const projects = JSON.parse(localStorage.getItem("weblin_projects") || "[]");
-
-  projects.forEach(name => {
-    const div = document.createElement("div");
-    div.className = "project";
-    div.innerText = name;
-    div.onclick = () => openProject(name);
-    list.appendChild(div);
-  });
-}
-
-function openProject(name) {
-  currentProject = name;
-  const data = JSON.parse(localStorage.getItem("project_" + name));
-  html.value = data.html;
-  css.value = data.css;
-  js.value = data.js;
-  weblin.value = data.weblin;
-
-  home.style.display = "none";
-  editor.style.display = "flex";
-  fab.style.display = "none";
-  title.innerText = name;
-}
-
-function goHome() {
-  editor.style.display = "none";
-  home.style.display = "block";
-  fab.style.display = "flex";
-  title.innerText = "Weblin Studio";
-}
-
-function saveProject() {
-  if (!currentProject) return;
-  const data = {
-    html: html.value,
-    css: css.value,
-    js: js.value,
-    weblin: weblin.value
-  };
-  localStorage.setItem("project_" + currentProject, JSON.stringify(data));
-  alert("Salvo!");
-}
-
-function switchTab(tab, el) {
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  el.classList.add("active");
-
-  ["html","css","js","weblin"].forEach(id => {
-    document.getElementById(id).classList.remove("active");
-  });
-  preview.classList.remove("active");
-
-  if (tab === "preview") {
-    preview.classList.add("active");
-    runPreview();
-  } else {
-    document.getElementById(tab).classList.add("active");
-  }
-}
-
-function runPreview() {
-  const doc = `
-  <html>
-  <head>
-  <style>${css.value}</style>
-  </head>
-  <body>
-  ${html.value}
-  <script>${js.value}<\/script>
-  </body>
-  </html>`;
-  preview.srcdoc = doc;
-}
-
-loadProjects();
-</script>
+<div id="chat">
+  <div id="chatLog">
+    <div>Você: Oi</div>
+    <div>🤖 IA: Desculpe, não entendi. Tente simplificar a pergunta.</div>
+    <div>Você: Como posso adicionar um texto ao site?</div>
+    <div>🤖 IA: Desculpe, não entendi. Tente simplificar a pergunta.</div>
+  </div>
+  <div id="chatInput">
+    <input type="text" placeholder="Escreva algo...">
+    <button>Enviar</button>
+  </div>
+</div>
 
 </body>
 </html>
